@@ -4,6 +4,7 @@ import { Accordion } from '../Accordion';
 
 describe('Accordion', () => {
   it('renders an accessible control', () => {
-    render(<Accordion items={[{ id: 'one', title: 'One', content: 'Content' }]} />); expect(screen.getByRole('button', { name: /One/ })).toBeVisible();
+    render(<Accordion items={[{ id: 'one', title: 'One', content: 'Content' }]} />);
+    expect(screen.getByRole('button', { name: /One/ })).toBeVisible();
   });
 });

@@ -19,7 +19,11 @@ export function CopyButton({ value, label = 'Copy' }: { value: string; label?: s
 
   return (
     <div className="flex items-center gap-2">
-      {copyError && <span role="status" className="text-[11px] text-rose-300">We couldn’t copy this. We can select the code manually.</span>}
+      {copyError && (
+        <span role="status" className="text-[11px] text-rose-300">
+          We couldn’t copy this. We can select the code manually.
+        </span>
+      )}
       <Button
         size="sm"
         variant="outline"

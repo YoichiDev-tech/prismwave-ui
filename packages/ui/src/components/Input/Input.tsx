@@ -11,7 +11,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const messageId = `${inputId}-message`;
   return (
     <div className="grid gap-2">
-      {label && <label htmlFor={inputId} className="text-base font-medium">{label}</label>}
+      {label && (
+        <label htmlFor={inputId} className="text-base font-medium">
+          {label}
+        </label>
+      )}
       <input
         ref={ref}
         id={inputId}
@@ -24,7 +28,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         )}
         {...props}
       />
-      {(error || hint) && <p id={messageId} className={cn('text-sm', error ? 'text-destructive' : 'text-muted-foreground')}>{error ?? hint}</p>}
+      {(error || hint) && (
+        <p
+          id={messageId}
+          className={cn('text-sm', error ? 'text-destructive' : 'text-muted-foreground')}
+        >
+          {error ?? hint}
+        </p>
+      )}
     </div>
   );
 });

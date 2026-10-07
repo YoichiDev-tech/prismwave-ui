@@ -4,6 +4,7 @@ import { Checkbox } from '../Checkbox';
 
 describe('Checkbox', () => {
   it('renders an accessible control', () => {
-    render(<Checkbox label="Accept" />); expect(screen.getByRole('checkbox', { name: 'Accept' })).toBeVisible();
+    render(<Checkbox label="Accept" />);
+    expect(screen.getByRole('checkbox', { name: 'Accept' })).toBeVisible();
   });
 });

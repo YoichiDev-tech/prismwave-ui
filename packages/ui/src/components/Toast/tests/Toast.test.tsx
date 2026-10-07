@@ -4,6 +4,7 @@ import { Toast } from '../Toast';
 
 describe('Toast', () => {
   it('renders an accessible control', () => {
-    render(<Toast title="Saved" onClose={() => undefined} />); expect(screen.getByRole('status')).toBeVisible();
+    render(<Toast title="Saved" onClose={() => undefined} />);
+    expect(screen.getByRole('status')).toBeVisible();
   });
 });

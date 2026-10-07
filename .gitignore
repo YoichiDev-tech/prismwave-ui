@@ -8,3 +8,7 @@ coverage
 .env
 .env.*
 !.env.example
+*.tsbuildinfo
+apps/docs/src/**/*.d.ts
+apps/docs/vite.config.js
+apps/docs/vite.config.d.ts

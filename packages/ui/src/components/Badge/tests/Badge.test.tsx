@@ -4,6 +4,7 @@ import { Badge } from '../Badge';
 
 describe('Badge', () => {
   it('renders an accessible control', () => {
-    render(<Badge>New</Badge>); expect(screen.getByText('New')).toBeVisible();
+    render(<Badge>New</Badge>);
+    expect(screen.getByText('New')).toBeVisible();
   });
 });

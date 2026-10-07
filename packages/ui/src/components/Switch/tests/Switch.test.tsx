@@ -4,6 +4,7 @@ import { Switch } from '../Switch';
 
 describe('Switch', () => {
   it('renders an accessible control', () => {
-    render(<Switch label="Enabled" />); expect(screen.getByRole('switch', { name: 'Enabled' })).toBeVisible();
+    render(<Switch label="Enabled" />);
+    expect(screen.getByRole('switch', { name: 'Enabled' })).toBeVisible();
   });
 });

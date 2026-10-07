@@ -92,7 +92,9 @@ kbd {
   background: hsl(var(--pw-color-muted) / 0.38);
   padding: 0 0.55rem 0 0.75rem;
   color: hsl(var(--pw-color-muted-foreground));
-  transition: border-color 160ms ease, background 160ms ease;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease;
 }
 
 .docs-search:focus-within {
@@ -122,7 +124,9 @@ kbd {
   font-size: 0.8rem;
   font-weight: 550;
   color: hsl(var(--pw-color-foreground) / 0.75);
-  transition: color 160ms ease, background 160ms ease;
+  transition:
+    color 160ms ease,
+    background 160ms ease;
 }
 
 .docs-header-link:hover {
@@ -180,7 +184,10 @@ kbd {
   color: hsl(var(--pw-color-muted-foreground));
   font-size: 0.81rem;
   font-weight: 500;
-  transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
+  transition:
+    background 150ms ease,
+    color 150ms ease,
+    border-color 150ms ease;
 }
 
 .docs-nav-link:hover {
@@ -257,7 +264,9 @@ kbd {
   border-radius: 0.85rem;
   background: hsl(var(--pw-color-muted) / 0.45);
   color: hsl(var(--pw-color-primary));
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .home-feature-card:hover .feature-icon {

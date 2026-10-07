@@ -7,7 +7,14 @@ import { fileURLToPath } from 'node:url';
 const packageRoot = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
-  plugins: [react(), dts({ entryRoot: 'src', rollupTypes: false })],
+  plugins: [
+    react(),
+    dts({
+      entryRoot: 'src',
+      rollupTypes: false,
+      exclude: ['src/test-setup.ts', 'src/**/tests/**'],
+    }),
+  ],
   build: {
     lib: {
       entry: {
@@ -21,7 +28,8 @@ export default defineConfig({
     rollupOptions: {
       external: ['react', 'react-dom', 'react/jsx-runtime'],
       output: {
-        assetFileNames: (asset) => asset.name === 'style.css' ? 'styles.css' : asset.name ?? 'asset',
+        assetFileNames: (asset) =>
+          asset.name === 'style.css' ? 'styles.css' : (asset.name ?? 'asset'),
       },
     },
   },

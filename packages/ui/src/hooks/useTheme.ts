@@ -10,7 +10,9 @@ export function useTheme(defaultTheme: Theme = 'system') {
 
   useEffect(() => {
     const root = document.documentElement;
-    const dark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const dark =
+      theme === 'dark' ||
+      (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
     root.dataset.theme = dark ? 'dark' : 'light';
     root.classList.toggle('dark', dark);
     root.classList.toggle('light', !dark);

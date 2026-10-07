@@ -35,15 +35,26 @@ function RouteEffects() {
   return null;
 }
 
-function ComponentRoute() { const { name = '' } = useParams(); return <ComponentPage name={name} />; }
+function ComponentRoute() {
+  const { name = '' } = useParams();
+  return <ComponentPage name={name} />;
+}
 
 function NotFound() {
   return (
     <section className="mx-auto grid min-h-[55vh] max-w-lg content-center justify-items-start">
       <p className="eyebrow">404 · Page not found</p>
-      <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight">We couldn’t find this page.</h1>
-      <p className="mt-3 text-sm leading-6 text-muted-foreground">We may have moved this page or the link may be outdated. We can return to our overview and find what we need.</p>
-      <Link to="/" className="mt-6 inline-flex h-10 items-center justify-center gap-2 rounded-pw border border-border bg-canvas px-4 text-sm font-medium shadow-sm transition hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary">
+      <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight">
+        We couldn’t find this page.
+      </h1>
+      <p className="mt-3 text-sm leading-6 text-muted-foreground">
+        We may have moved this page or the link may be outdated. We can return to our overview and
+        find what we need.
+      </p>
+      <Link
+        to="/"
+        className="mt-6 inline-flex h-10 items-center justify-center gap-2 rounded-pw border border-border bg-canvas px-4 text-sm font-medium shadow-sm transition hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary"
+      >
         <ArrowLeft size={15} /> Back to overview
       </Link>
     </section>

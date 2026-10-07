@@ -1,6 +1,6 @@
 {
   "buildCommand": "pnpm --filter @prismwave/docs build",
   "outputDirectory": "apps/docs/dist",
-  "installCommand": "corepack enable && pnpm install --no-frozen-lockfile",
+  "installCommand": "corepack enable && pnpm install --frozen-lockfile",
   "framework": "vite"
 }

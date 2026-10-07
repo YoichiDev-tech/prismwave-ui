@@ -4,6 +4,11 @@ import { Tooltip } from '../Tooltip';
 
 describe('Tooltip', () => {
   it('renders an accessible control', () => {
-    render(<Tooltip content="Help"><button>Info</button></Tooltip>); expect(screen.getByRole('button', { name: 'Info' })).toBeVisible();
+    render(
+      <Tooltip content="Help">
+        <button>Info</button>
+      </Tooltip>,
+    );
+    expect(screen.getByRole('button', { name: 'Info' })).toBeVisible();
   });
 });

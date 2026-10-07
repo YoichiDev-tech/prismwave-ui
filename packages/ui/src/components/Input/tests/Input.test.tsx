@@ -4,6 +4,7 @@ import { Input } from '../Input';
 
 describe('Input', () => {
   it('renders an accessible control', () => {
-    render(<Input aria-label="Email" />); expect(screen.getByRole('textbox', { name: 'Email' })).toBeVisible();
+    render(<Input aria-label="Email" />);
+    expect(screen.getByRole('textbox', { name: 'Email' })).toBeVisible();
   });
 });

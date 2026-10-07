@@ -4,6 +4,7 @@ import { Card } from '../Card';
 
 describe('Card', () => {
   it('renders an accessible control', () => {
-    render(<Card>Content</Card>); expect(screen.getByText('Content')).toBeVisible();
+    render(<Card>Content</Card>);
+    expect(screen.getByText('Content')).toBeVisible();
   });
 });

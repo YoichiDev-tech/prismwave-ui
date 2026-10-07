@@ -1,0 +1,114 @@
+:root {
+  --pw-color-canvas: 0 0% 100%;
+  --pw-color-foreground: 222 47% 11%;
+  --pw-color-muted: 210 40% 96%;
+  --pw-color-muted-foreground: 215 16% 47%;
+  --pw-color-border: 214 32% 91%;
+  --pw-color-input: 214 32% 91%;
+  --pw-color-primary: 221 83% 53%;
+  --pw-color-primary-foreground: 210 40% 98%;
+  --pw-color-secondary: 210 40% 96%;
+  --pw-color-secondary-foreground: 222 47% 11%;
+  --pw-color-accent: 280 80% 55%;
+  --pw-color-accent-foreground: 210 40% 98%;
+  --pw-color-destructive: 0 72% 51%;
+  --pw-color-destructive-foreground: 210 40% 98%;
+  --pw-color-success: 142 71% 45%;
+  --pw-color-warning: 38 92% 50%;
+  --pw-color-info: 199 89% 48%;
+
+  --pw-space-0: 0;
+  --pw-space-1: 0.25rem;
+  --pw-space-2: 0.5rem;
+  --pw-space-3: 0.75rem;
+  --pw-space-4: 1rem;
+  --pw-space-5: 1.25rem;
+  --pw-space-6: 1.5rem;
+  --pw-space-8: 2rem;
+  --pw-space-10: 2.5rem;
+  --pw-space-12: 3rem;
+  --pw-space-16: 4rem;
+  --pw-space-18: 4.5rem;
+  --pw-space-20: 5rem;
+  --pw-space-22: 5.5rem;
+  --pw-space-24: 6rem;
+
+  --pw-radius-none: 0;
+  --pw-radius-sm: 0.375rem;
+  --pw-radius-md: 0.625rem;
+  --pw-radius-lg: 0.875rem;
+  --pw-radius-xl: 1.25rem;
+  --pw-radius-2xl: 1.5rem;
+  --pw-radius-full: 9999px;
+
+  --pw-shadow-sm: 0 1px 2px hsl(222 47% 11% / 0.08);
+  --pw-shadow-md: 0 8px 24px hsl(222 47% 11% / 0.12);
+  --pw-shadow-lg: 0 18px 48px hsl(222 47% 11% / 0.16);
+  --pw-shadow-xl: 0 28px 70px hsl(222 47% 11% / 0.2);
+
+  --pw-font-sans: 'Inter', 'ui-sans-serif';
+  --pw-font-display: 'Space Grotesk', 'Inter', 'ui-sans-serif';
+  --pw-font-size-xs: 0.75rem;
+  --pw-font-size-sm: 0.875rem;
+  --pw-font-size-md: 1rem;
+  --pw-font-size-lg: 1.125rem;
+  --pw-font-size-xl: 1.25rem;
+  --pw-font-size-2xl: 1.5rem;
+  --pw-font-size-3xl: 1.875rem;
+  --pw-font-size-4xl: 2.25rem;
+  --pw-font-size-5xl: 3rem;
+  --pw-font-weight-normal: 400;
+  --pw-font-weight-medium: 500;
+  --pw-font-weight-semibold: 600;
+  --pw-font-weight-bold: 700;
+  --pw-line-height-tight: 1.15;
+  --pw-line-height-normal: 1.5;
+  --pw-line-height-relaxed: 1.7;
+}
+
+.light,
+[data-theme='light'] {
+  --pw-color-canvas: 0 0% 100%;
+  --pw-color-foreground: 222 47% 11%;
+  --pw-color-muted: 210 40% 96%;
+  --pw-color-muted-foreground: 215 16% 47%;
+  --pw-color-border: 214 32% 91%;
+  --pw-color-input: 214 32% 91%;
+  --pw-color-primary: 221 83% 53%;
+  --pw-color-primary-foreground: 210 40% 98%;
+  --pw-color-secondary: 210 40% 96%;
+  --pw-color-secondary-foreground: 222 47% 11%;
+  --pw-color-accent: 280 80% 55%;
+  --pw-color-accent-foreground: 210 40% 98%;
+  --pw-color-destructive: 0 72% 51%;
+  --pw-color-destructive-foreground: 210 40% 98%;
+}
+
+.dark,
+[data-theme='dark'] {
+  color-scheme: dark;
+  --pw-color-canvas: 222 47% 11%;
+  --pw-color-foreground: 210 40% 98%;
+  --pw-color-muted: 217 33% 17%;
+  --pw-color-muted-foreground: 215 20% 65%;
+  --pw-color-border: 217 24% 27%;
+  --pw-color-input: 217 24% 27%;
+  --pw-color-primary: 221 83% 53%;
+  --pw-color-primary-foreground: 210 40% 98%;
+  --pw-color-secondary: 217 33% 17%;
+  --pw-color-secondary-foreground: 210 40% 98%;
+  --pw-color-accent: 280 80% 60%;
+  --pw-color-accent-foreground: 210 40% 98%;
+  --pw-color-destructive: 0 72% 51%;
+  --pw-color-destructive-foreground: 210 40% 98%;
+}
+
+* {
+  border-color: hsl(var(--pw-color-border));
+}
+
+body {
+  background: hsl(var(--pw-color-canvas));
+  color: hsl(var(--pw-color-foreground));
+  font-family: var(--pw-font-sans), ui-sans-serif, system-ui, sans-serif;
+}

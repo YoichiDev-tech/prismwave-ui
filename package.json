@@ -1,0 +1,23 @@
+{
+  "name": "prismwave-ui",
+  "private": true,
+  "packageManager": "pnpm@10.15.0",
+  "scripts": {
+    "dev": "pnpm --filter @prismwave/docs dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm --filter @prismwave/ui test",
+    "test:watch": "pnpm --filter @prismwave/ui test:watch",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.7",
+    "@types/node": "^22.15.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.8.3"
+  }
+}

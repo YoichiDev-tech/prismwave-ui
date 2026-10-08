@@ -1,237 +1,408 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Blocks, BookOpen, LayoutTemplate, Palette, Search, X } from 'lucide-react';
-import { Input, PageContainer } from '@prismwave/ui';
-import { ThemeToggle } from './ThemeToggle';
+import { useEffect, useState, type ReactNode } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useTheme, Button, Input, cn } from '@prismwave/ui';
 
-const sections = [
+const NAV = [
   {
-    label: 'Get started',
-    items: [{ label: 'Overview', href: '/', icon: BookOpen }],
-  },
-  {
-    label: 'Foundations',
+    title: 'Guide',
     items: [
-      { label: 'Design tokens', href: '/tokens', icon: Palette },
-      { label: 'Layouts', href: '/layouts', icon: LayoutTemplate },
+      { to: '/', label: 'Overview' },
+      { to: '/getting-started', label: 'Getting started' },
+      { to: '/tokens', label: 'Design tokens' },
+      { to: '/layouts', label: 'Layouts' },
     ],
   },
   {
-    label: 'Components',
+    title: 'Components',
     items: [
-      'Button',
-      'Input',
-      'Select',
-      'Checkbox',
-      'Switch',
-      'Badge',
-      'Card',
-      'Modal',
-      'Dropdown',
-      'Tabs',
-      'Accordion',
-      'Tooltip',
-      'Toast',
-      'Skeleton',
-      'Table',
-      'Pagination',
-    ].map((label) => ({ label, href: `/components/${label.toLowerCase()}`, icon: Blocks })),
+      { to: '/components/button', label: 'Button' },
+      { to: '/components/input', label: 'Input' },
+      { to: '/components/badge', label: 'Badge' },
+      { to: '/components/card', label: 'Card' },
+      { to: '/components/modal', label: 'Modal' },
+      { to: '/components/select', label: 'Select' },
+      { to: '/components/checkbox', label: 'Checkbox' },
+      { to: '/components/switch', label: 'Switch' },
+      { to: '/components/dropdown', label: 'Dropdown' },
+      { to: '/components/tabs', label: 'Tabs' },
+      { to: '/components/accordion', label: 'Accordion' },
+      { to: '/components/tooltip', label: 'Tooltip' },
+      { to: '/components/toast', label: 'Toast' },
+      { to: '/components/skeleton', label: 'Skeleton' },
+      { to: '/components/table', label: 'Table' },
+      { to: '/components/pagination', label: 'Pagination' },
+    ],
   },
 ];
 
-const allLinks = sections.flatMap((section) => section.items);
+function getPageTitle(pathname: string) {
+  if (pathname === '/') return 'Overview';
+
+  if (pathname.startsWith('/components/')) {
+    const name = pathname.split('/')[2] || '';
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  }
+
+  const map: Record<string, string> = {
+    '/getting-started': 'Getting started',
+    '/tokens': 'Design tokens',
+    '/layouts': 'Layouts',
+  };
+
+  return map[pathname] || pathname.replace(/^\//, '');
+}
 
 export function DocsShell({ children }: { children: ReactNode }) {
-  const [query, setQuery] = useState('');
+  const { theme, setTheme } = useTheme();
+
+  const [search, setSearch] = useState('');
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
   const location = useLocation();
-  const desktopSearchRef = useRef<HTMLInputElement>(null);
-  const mobileSearchRef = useRef<HTMLInputElement>(null);
-  const filtered = useMemo(
-    () =>
-      sections
-        .map((section) => ({
-          ...section,
-          items: section.items.filter((item) =>
-            item.label.toLowerCase().includes(query.toLowerCase()),
-          ),
-        }))
-        .filter((section) => section.items.length > 0),
-    [query],
-  );
 
+  const resolvedTheme =
+    theme === 'system'
+      ? window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light'
+      : theme;
+
+  const toggle = () => {
+    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+  };
+
+  // Close mobile nav on route change
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
-        event.preventDefault();
-        if (window.matchMedia('(min-width: 1024px)').matches) {
-          desktopSearchRef.current?.focus();
-        } else {
-          setMobileNavOpen(true);
-        }
-      }
-      if (event.key === 'Escape') setMobileNavOpen(false);
+    setMobileNavOpen(false);
+  }, [location.pathname]);
+
+  // Lock body scroll when mobile nav is open
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = prev;
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  useEffect(() => {
-    if (mobileNavOpen) mobileSearchRef.current?.focus();
   }, [mobileNavOpen]);
 
-  const navigation = (mobile = false) => (
-    <nav aria-label={mobile ? 'Mobile documentation' : 'Documentation'} className="space-y-7">
-      {filtered.map((section) => (
-        <div key={section.label}>
-          <p className="docs-nav-heading">{section.label}</p>
-          <div className="mt-2 space-y-1">
-            {section.items.map((item) => {
-              const active = location.pathname === item.href;
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  to={item.href}
-                  onClick={() => setMobileNavOpen(false)}
-                  aria-current={active ? 'page' : undefined}
-                  className={`docs-nav-link ${active ? 'docs-nav-link-active' : ''}`}
-                >
-                  <Icon size={16} strokeWidth={1.8} aria-hidden="true" />
-                  <span>{item.label}</span>
-                  {active && (
-                    <span
-                      className="ml-auto h-1.5 w-1.5 rounded-full bg-primary"
-                      aria-hidden="true"
-                    />
-                  )}
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      ))}
-      {query &&
-        allLinks.filter((item) => item.label.toLowerCase().includes(query.toLowerCase())).length ===
-          0 && <p className="px-3 text-sm text-muted-foreground">No pages match “{query}”.</p>}
-    </nav>
-  );
+  // Escape closes mobile nav
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMobileNavOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', onKey);
+
+    return () => {
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [mobileNavOpen]);
+
+  const filtered = search.trim()
+    ? NAV.flatMap((group) =>
+        group.items.filter((item) =>
+          item.label.toLowerCase().includes(search.toLowerCase()),
+        ),
+      )
+    : null;
 
   return (
-    <div className="min-h-screen bg-canvas text-foreground">
-      <header className="docs-header sticky top-0 z-40 border-b border-border/80">
-        <PageContainer className="flex h-[4.25rem] items-center gap-4">
+    <div className="min-h-screen min-h-[100dvh] overflow-x-hidden bg-background text-foreground">
+      {/* Desktop sidebar */}
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-border bg-card lg:flex">
+        <div className="flex h-14 shrink-0 items-center gap-2 border-b border-border px-4">
           <Link
             to="/"
-            className="group flex shrink-0 items-center gap-2.5"
-            aria-label="Prismwave UI home"
+            className="flex items-center gap-2 font-semibold tracking-tight"
           >
-            <span className="docs-brand-mark">
-              <span />
+            <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">
+              PW
             </span>
-            <span className="font-display text-[1.05rem] font-bold tracking-tight">
-              prismwave<span className="text-primary">.</span>
-            </span>
+
+            <span>PrismWave UI</span>
           </Link>
-          <span className="hidden h-5 w-px bg-border sm:block" aria-hidden="true" />
-          <span className="hidden text-sm text-muted-foreground sm:block">UI documentation</span>
-          <div className="ml-auto flex items-center gap-2">
-            <label className="docs-search hidden md:flex">
-              <Search size={15} aria-hidden="true" />
-              <Input
-                ref={desktopSearchRef}
-                aria-label="Search documentation"
-                aria-keyshortcuts="Control+K Meta+K"
-                placeholder="Search pages..."
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                className="h-9 border-0 bg-transparent px-1 text-base shadow-none focus-visible:ring-0"
-              />
-              <kbd className="hidden rounded border border-border bg-canvas px-1.5 py-0.5 text-[10px] text-muted-foreground lg:block">
-                Ctrl / Meta K
-              </kbd>
-            </label>
-            <span className="hidden rounded-full border border-border/80 px-3.5 py-1.5 text-sm font-medium text-muted-foreground sm:inline-flex">
-              MIT licensed
-            </span>
-            <ThemeToggle />
+        </div>
+
+        <div className="border-b border-border p-3">
+          <Input
+            className="h-9 text-sm"
+            placeholder="Search…"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            aria-label="Search documentation"
+          />
+        </div>
+
+        <nav
+          className="flex-1 overflow-y-auto p-3"
+          aria-label="Documentation"
+        >
+          {filtered ? (
+            <ul className="space-y-0.5">
+              {filtered.map((item) => (
+                <li key={item.to}>
+                  <NavLink
+                    to={item.to}
+                    className={({ isActive }) =>
+                      cn(
+                        'block rounded-md px-2.5 py-1.5 text-sm',
+                        isActive
+                          ? 'bg-accent font-medium text-accent-foreground'
+                          : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                      )
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                </li>
+              ))}
+
+              {filtered.length === 0 && (
+                <li className="px-2.5 py-2 text-sm text-muted-foreground">
+                  No results
+                </li>
+              )}
+            </ul>
+          ) : (
+            NAV.map((group) => (
+              <div key={group.title} className="mb-5">
+                <p className="mb-1.5 px-2.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  {group.title}
+                </p>
+
+                <ul className="space-y-0.5">
+                  {group.items.map((item) => (
+                    <li key={item.to}>
+                      <NavLink
+                        to={item.to}
+                        end={item.to === '/'}
+                        className={({ isActive }) =>
+                          cn(
+                            'block rounded-md px-2.5 py-1.5 text-sm',
+                            isActive
+                              ? 'bg-accent font-medium text-accent-foreground'
+                              : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                          )
+                        }
+                      >
+                        {item.label}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          )}
+        </nav>
+
+        <div className="shrink-0 border-t border-border p-3 text-xs text-muted-foreground">
+          MIT · v0.1.0
+        </div>
+      </aside>
+
+      {/* Mobile navigation */}
+      {mobileNavOpen && (
+        <div
+          className="fixed inset-0 z-50 flex flex-col bg-background lg:hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation"
+        >
+          <div className="flex h-14 shrink-0 items-center justify-between border-b border-border px-4">
+            <Link
+              to="/"
+              className="flex items-center gap-2 font-semibold tracking-tight"
+              onClick={() => setMobileNavOpen(false)}
+            >
+              <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">
+                PW
+              </span>
+
+              <span>PrismWave UI</span>
+            </Link>
+
             <button
               type="button"
-              className="docs-icon-button lg:hidden"
-              aria-label={mobileNavOpen ? 'Close navigation' : 'Open navigation'}
-              aria-expanded={mobileNavOpen}
-              aria-controls="mobile-docs-nav"
-              onClick={() => setMobileNavOpen((open) => !open)}
+              onClick={() => setMobileNavOpen(false)}
+              className="rounded-md p-2 text-muted-foreground hover:bg-muted"
+              aria-label="Close navigation"
             >
-              {mobileNavOpen ? (
-                <X size={18} />
-              ) : (
-                <span className="docs-menu-icon">
-                  <i />
-                  <i />
-                  <i />
-                </span>
-              )}
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
             </button>
           </div>
-        </PageContainer>
-        {mobileNavOpen && (
-          <div
-            id="mobile-docs-nav"
-            className="border-t border-border bg-canvas px-5 py-5 lg:hidden"
-          >
-            <div className="mb-5 flex items-center gap-2 rounded-pw border bg-muted/40 px-3">
-              <Search size={15} className="shrink-0 text-muted-foreground" aria-hidden="true" />
-              <Input
-                ref={mobileSearchRef}
-                aria-label="Search documentation"
-                aria-keyshortcuts="Control+K Meta+K"
-                placeholder="Search pages..."
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                className="h-10 border-0 bg-transparent px-0 shadow-none focus-visible:ring-0"
-              />
-            </div>
-            {navigation(true)}
-          </div>
-        )}
-      </header>
 
-      <div className="mx-auto grid max-w-[1440px] lg:grid-cols-[248px_minmax(0,1fr)]">
-        <aside className="docs-sidebar hidden border-r border-border/80 lg:block">
-          <div className="sticky top-[4.25rem] max-h-[calc(100vh-4.25rem)] overflow-y-auto px-5 py-8">
-            <div className="mb-7 flex items-center justify-between px-3">
-              <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                Documentation
-              </span>
-              <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-                v0.1
-              </span>
-            </div>
-            {navigation()}
-            <div className="mt-10 rounded-pw-lg border border-border/80 bg-gradient-to-br from-primary/[0.07] to-accent/[0.08] p-4">
-              <div className="flex h-8 w-8 items-center justify-center rounded-pw bg-canvas text-primary shadow-sm">
-                <Blocks size={16} />
-              </div>
-              <p className="mt-3 text-sm font-semibold">We build in the open.</p>
-              <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                We welcome ideas that make our library better for everyone.
-              </p>
-              <Link
-                className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
-                to="/components/button"
-              >
-                Explore components
-              </Link>
-            </div>
+          <div className="border-b border-border p-3">
+            <Input
+              className="h-9 text-sm"
+              placeholder="Search…"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              aria-label="Search documentation"
+              autoFocus
+            />
           </div>
-        </aside>
-        <main className="docs-main min-w-0 px-5 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12">
-          {children}
-          <footer className="docs-footer mt-20 flex flex-col gap-3 border-t border-border/80 pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-            <span>We build Prismwave UI in the open under the MIT License.</span>
-            <span>We build for thoughtful interfaces.</span>
-          </footer>
+
+          <nav
+            className="flex-1 overflow-y-auto overscroll-contain p-3"
+            aria-label="Documentation"
+          >
+            {filtered ? (
+              <ul className="space-y-0.5">
+                {filtered.map((item) => (
+                  <li key={item.to}>
+                    <NavLink
+                      to={item.to}
+                      onClick={() => setMobileNavOpen(false)}
+                      className={({ isActive }) =>
+                        cn(
+                          'block rounded-md px-3 py-2.5 text-base',
+                          isActive
+                            ? 'bg-accent font-medium text-accent-foreground'
+                            : 'text-foreground hover:bg-muted',
+                        )
+                      }
+                    >
+                      {item.label}
+                    </NavLink>
+                  </li>
+                ))}
+
+                {filtered.length === 0 && (
+                  <li className="px-3 py-3 text-sm text-muted-foreground">
+                    No results
+                  </li>
+                )}
+              </ul>
+            ) : (
+              NAV.map((group) => (
+                <div key={group.title} className="mb-6">
+                  <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    {group.title}
+                  </p>
+
+                  <ul className="space-y-0.5">
+                    {group.items.map((item) => (
+                      <li key={item.to}>
+                        <NavLink
+                          to={item.to}
+                          end={item.to === '/'}
+                          onClick={() => setMobileNavOpen(false)}
+                          className={({ isActive }) =>
+                            cn(
+                              'block rounded-md px-3 py-2.5 text-base',
+                              isActive
+                                ? 'bg-accent font-medium text-accent-foreground'
+                                : 'text-foreground hover:bg-muted',
+                            )
+                          }
+                        >
+                          {item.label}
+                        </NavLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))
+            )}
+          </nav>
+
+          <div className="shrink-0 border-t border-border p-4 text-center text-xs text-muted-foreground">
+            MIT · v0.1.0
+          </div>
+        </div>
+      )}
+
+      {/* Main content */}
+      <div className="w-full lg:pl-64">
+        <header className="sticky top-0 z-20 flex h-14 items-center gap-2 border-b border-border bg-background/95 px-3 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:px-4">
+          <button
+            type="button"
+            className="rounded-md p-2 text-muted-foreground hover:bg-muted lg:hidden"
+            onClick={() => setMobileNavOpen(true)}
+            aria-label="Open navigation"
+            aria-expanded={mobileNavOpen}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+
+          <div className="min-w-0 flex-1 truncate text-sm font-medium">
+            {getPageTitle(location.pathname)}
+          </div>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggle}
+            aria-label={
+              resolvedTheme === 'dark'
+                ? 'Switch to light mode'
+                : 'Switch to dark mode'
+            }
+            className="shrink-0"
+          >
+            {resolvedTheme === 'dark' ? (
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l1.41 1.41" />
+              </svg>
+            ) : (
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            )}
+          </Button>
+
+          <a
+            href="https://github.com/YoichiDev-tech/prismwave-ui"
+            target="_blank"
+            rel="noreferrer"
+            className="hidden text-sm text-muted-foreground hover:text-foreground sm:inline"
+          >
+            GitHub
+          </a>
+        </header>
+
+        <main className="px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
+          <div className="mx-auto w-full max-w-3xl">{children}</div>
         </main>
       </div>
     </div>

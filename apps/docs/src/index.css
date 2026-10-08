@@ -292,3 +292,12 @@ kbd {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Mobile-friendly tables & code */
+.docs-table-wrap {
+  @apply -mx-4 overflow-x-auto sm:mx-0;
+}
+
+pre {
+  @apply max-w-full overflow-x-auto;
+}

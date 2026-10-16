@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@v4
         with:
           version: 10.15.0
@@ -18,8 +20,30 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Format source before quality checks
-        run: pnpm format
+      - name: Check formatting for changed files
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          files=$(git diff --name-only "$BASE_SHA" "$GITHUB_SHA" -- '*.ts' '*.tsx' '*.js' '*.jsx' '*.mjs' '*.cjs' '*.json' '*.css' '*.md' '*.yml' '*.yaml')
+          if [ -n "$files" ]; then
+            printf '%s\n' "$files" | xargs pnpm exec prettier --check
+          fi
+      - name: Check repository formatting on main pushes
+        if: ${{ github.event_name == 'push' }}
+        run: pnpm format:check
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm build
+      - name: Pack UI library
+        run: pnpm --filter @prismwave/ui pack --pack-destination "$RUNNER_TEMP"
+      - name: Verify packed package in a consumer project
+        env:
+          PACKAGE_TARBALL: ${{ runner.temp }}/prismwave-ui-0.1.0.tgz
+        run: |
+          mkdir "$RUNNER_TEMP/consumer"
+          cd "$RUNNER_TEMP/consumer"
+          npm init -y
+          npm install "$PACKAGE_TARBALL" react react-dom
+          node --input-type=module -e "const ui = await import('@prismwave/ui'); if (!ui.Button || !ui.Card) throw new Error('Expected component exports are missing'); const tailwind = await import('@prismwave/ui/tailwind'); if (!tailwind.default) throw new Error('Tailwind preset export is missing'); console.log('Consumer package imports passed')"
+          test -f node_modules/@prismwave/ui/dist/styles.css

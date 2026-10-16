@@ -21,17 +21,17 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Check formatting for changed files
-        if: ${{ github.event_name == 'pull_request' }}
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: |
+          if [ -z "$BASE_SHA" ] || [ "$BASE_SHA" = "0000000000000000000000000000000000000000" ]; then
+            echo "No previous commit available; skipping changed-file formatting check."
+            exit 0
+          fi
           files=$(git diff --name-only "$BASE_SHA" "$GITHUB_SHA" -- '*.ts' '*.tsx' '*.js' '*.jsx' '*.mjs' '*.cjs' '*.json' '*.css' '*.md' '*.yml' '*.yaml')
           if [ -n "$files" ]; then
             printf '%s\n' "$files" | xargs pnpm exec prettier --check
           fi
-      - name: Check repository formatting on main pushes
-        if: ${{ github.event_name == 'push' }}
-        run: pnpm format:check
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm build

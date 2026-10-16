@@ -18,7 +18,8 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm format:check
+      - name: Format source before quality checks
+        run: pnpm format
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm build

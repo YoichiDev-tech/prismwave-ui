@@ -3,10 +3,17 @@ name: Release
 on:
   push:
     branches: [main]
+  pull_request:
+    paths:
+      - '.changeset/**'
+      - '.github/workflows/release.yml'
+      - 'apps/docs/**'
+      - 'packages/ui/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
 
 jobs:
   release:
-    if: ${{ github.repository_owner != '' }}
     runs-on: ubuntu-latest
     env:
       NPM_PUBLISH_ENABLED: ${{ secrets.NPM_TOKEN != '' }}
@@ -25,10 +32,10 @@ jobs:
           node-version: 22
           cache: pnpm
           registry-url: https://registry.npmjs.org
-      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - uses: changesets/action@v1
-        if: ${{ env.NPM_PUBLISH_ENABLED == 'true' }}
+        if: ${{ github.event_name == 'push' && env.NPM_PUBLISH_ENABLED == 'true' }}
         with:
           version: pnpm version-packages
           publish: pnpm release

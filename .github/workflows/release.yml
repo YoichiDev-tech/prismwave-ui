@@ -8,6 +8,8 @@ jobs:
   release:
     if: ${{ github.repository_owner != '' }}
     runs-on: ubuntu-latest
+    env:
+      NPM_PUBLISH_ENABLED: ${{ secrets.NPM_TOKEN != '' }}
     permissions:
       contents: write
       pull-requests: write
@@ -26,7 +28,7 @@ jobs:
       - run: pnpm install --no-frozen-lockfile
       - run: pnpm build
       - uses: changesets/action@v1
-        if: ${{ secrets.NPM_TOKEN != '' }}
+        if: ${{ env.NPM_PUBLISH_ENABLED == 'true' }}
         with:
           version: pnpm version-packages
           publish: pnpm release

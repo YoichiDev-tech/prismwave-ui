@@ -1,6 +1,6 @@
 # Contributing to Prismwave UI
 
-We appreciate every contribution to Prismwave UI. At Prismwave Studio, we welcome work that makes our library more useful, consistent, and accessible.
+We appreciate every contribution to Prismwave UI. At PrismWave Studio, we welcome work that makes our library more useful, consistent, and accessible.
 
 ## How we develop
 
@@ -11,14 +11,16 @@ pnpm install
 pnpm dev
 ```
 
-Before we open a pull request, we run our full quality suite:
+Before opening a pull request, format files and run the quality suite:
 
 ```bash
-pnpm format:check
+pnpm format
 pnpm lint
 pnpm test
 pnpm build
 ```
+
+CI checks formatting on changed files, runs lint and unit tests, builds both the component library and documentation app, and verifies that the packed library can be installed and imported from a clean consumer project. The release workflow also runs its build validation on relevant pull requests; package publishing is restricted to pushes to `main` when `NPM_TOKEN` is configured.
 
 ## Our component conventions
 

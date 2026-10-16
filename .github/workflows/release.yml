@@ -26,6 +26,7 @@ jobs:
       - run: pnpm install --no-frozen-lockfile
       - run: pnpm build
       - uses: changesets/action@v1
+        if: ${{ secrets.NPM_TOKEN != '' }}
         with:
           version: pnpm version-packages
           publish: pnpm release

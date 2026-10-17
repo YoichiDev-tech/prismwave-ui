@@ -8,6 +8,8 @@ An open-source, MIT-licensed React component library from [PrismWave Studio](htt
 
 ## Quick start
 
+Install the published package when it is available on npm:
+
 ```bash
 pnpm add @prismwave/ui
 ```
@@ -17,7 +19,7 @@ import '@prismwave/ui/styles.css';
 import { Button, Card } from '@prismwave/ui';
 ```
 
-Full usage, the Tailwind preset and the list of components are in the [package README](./packages/ui/README.md).
+For local development before the first npm release, clone this repository and follow the workspace instructions below. Full usage, the Tailwind preset and the list of components are in the [package README](./packages/ui/README.md).
 
 ## Repository layout
 
@@ -38,18 +40,22 @@ prismwave-ui/
 Requires Node 22 and pnpm 10.
 
 ```bash
+git clone https://github.com/YoichiDev-tech/prismwave-ui.git
+cd prismwave-ui
 pnpm install
 pnpm dev            # starts the docs app
 ```
 
-Before opening a pull request:
+Before opening a pull request, format files and run the quality suite:
 
 ```bash
-pnpm format:check
+pnpm format
 pnpm lint
 pnpm test
 pnpm build
 ```
+
+CI checks formatting on changed files and runs lint, tests, production builds, and a packed-package consumer smoke test. The release workflow also validates builds on relevant pull requests.
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) and [ARCHITECTURE.md](./ARCHITECTURE.md).
 
@@ -63,7 +69,7 @@ Components start from native HTML semantics, add ARIA only where a pattern needs
 
 ## Releasing
 
-Changes are versioned with [Changesets](https://github.com/changesets/changesets): run `pnpm changeset`, then `pnpm version-packages` and `pnpm release`. Publishing needs an `NPM_TOKEN` repository secret.
+Changes are versioned with [Changesets](https://github.com/changesets/changesets): run `pnpm changeset`, then `pnpm version-packages` and `pnpm release`. Publishing needs an `NPM_TOKEN` repository secret and only runs from `main`; pull requests never publish packages.
 
 ## License
 
